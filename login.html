@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			.login-form{
+				width: 80%;
+				margin-top: 50%;
+				margin-right: auto;
+				margin-left: auto;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <h1 class="mui-title">登录</h1>
+		</header>
+		<div class="mui-content" style="margin-top: 30%;">
+			<div class="log">
+			</div>
+		    <form class="mui-input-group">
+			    <div class="mui-input-row">
+			        <label>用户名</label>
+			    <input type="text" class="mui-input-clear" id="username" placeholder="请输入用户名">
+			    </div>
+			    <div class="mui-input-row">
+			        <label>密码</label>
+			        <input type="password" class="mui-input-password" id="userpwd" placeholder="请输入密码">
+			    </div>
+			    <div class="mui-button-row" id="loginbtn">
+			        <button type="button" class="mui-btn mui-btn-primary loginbtn">登录</button>
+			    </div>
+			</form>
+			<div class="rega" style="width: 120px; margin-left: auto;margin-right: auto;">
+				<span>没有账号？</span><a href="#">注册</a>
+			</div>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script src="js/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init(
+			);
+			
+			if(window.plus){
+			    plusReady();
+			}else{ 
+			    document.addEventListener( "plusready", plusReady, false );
+			}
+			// 扩展API准备完成后要执行的操作
+			function plusReady(){
+			    var ws = plus.webview.currentWebview(); //pw回车可输出plus.webview
+			    $(document).ready(function(){
+					//如果token存在直接跳转到主页
+					if(plus.storage.getLength() > 0){
+						mui.openWindow({
+							url:'index.html',
+							id:'index',
+							styles:{
+								top:0,
+								bottom:0
+							},
+							creatNew:false
+						})
+					}
+				})
+			}
+			
+			document.getElementById("loginbtn").addEventListener('click',function(){
+				//发送ajax请求进行登录
+				mui.ajax('http://139.199.15.45/login',{
+					data:{
+						username:document.getElementById("username").value,
+						userpwd:document.getElementById("userpwd").value
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						//将token存入到本地storage
+						plus.storage.clear();
+						plus.storage.setItem("token",data.token);
+						//创建新的webview，调到主页
+						mui.openWindow({
+							url:'index.html',
+							id:'index',
+							styles:{
+								top:0,
+								bottom:0
+							},
+							creatNew:false
+						});
+						var ws=plus.webview.currentWebview();
+						plus.webview.hide(ws);
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理； 
+						console.log(type);
+					}
+				})
+			})
+		</script>
+	</body>
+</html>

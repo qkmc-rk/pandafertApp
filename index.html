@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/mui.min.css"/>
+    <script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+	    <h1 class="mui-title">材料混合控制端</h1>
+	</header>
+	<nav class="mui-bar mui-bar-tab">
+			<a class="mui-tab-item mui-active" href="#tabbar">
+				<span class="mui-icon mui-icon-plusempty"></span>
+				<span class="mui-tab-label">材料混合</span>
+			</a>
+			<a class="mui-tab-item" href="#tabbar-with-chat">
+				<span class="mui-icon mui-icon-bars"></span>
+				<span class="mui-tab-label">订单</span>
+			</a>
+			<a class="mui-tab-item" href="#tabbar-with-contact">
+				<span class="mui-icon mui-icon-compose"></span>
+				<span class="mui-tab-label">历史订单</span>
+			</a>
+			<a class="mui-tab-item" href="#tabbar-with-map">
+				<span class="mui-icon mui-icon-person"></span>
+				<span class="mui-tab-label">个人中心</span>
+			</a>
+		</nav>
+		<div class="mui-content">
+			<div id="tabbar" class="mui-control-content mui-active" style="margin-top: 30%;width: 80%;margin-left: auto;margin-right: auto;">
+				<!--
+                	作者：314445437@qq.com
+                	时间：2017-11-02
+                	描述：配料页面，进行肥料混合参数设置
+                -->
+				<form class="mui-input-group">
+			        <div class="mui-input-row">
+			            <label>肥料A</label>
+			            <input type="number" class="mui-input-numbox" id="ferta" placeholder="肥料A量">
+			        </div>
+			        <div class="mui-input-row">
+			        	<label>肥料B</label>
+			            <input type="number" class="mui-input-numbox" id="fertb" placeholder="肥料B量">
+			        </div>
+			        <div class="mui-input-row">
+			        	<label>肥料C</label>
+			            <input type="number" class="mui-input-numbox" id="fertc" placeholder="肥料C量">
+			        </div>
+			        <div class="mui-button-row">
+			        	<button type="button" class="mui-btn mui-btn-blue" id="mkfertbtn">添加到订单</button>
+			        </div>
+			    </form>
+			</div>
+			<div id="tabbar-with-chat" class="mui-control-content">
+				<div id="refreshOd" style="width:24px; margin-left: auto; margin-right: auto; margin-top: 10px;">
+					<span class="mui-icon mui-icon-loop"></span>
+				</div>
+				<div id="order-tab">
+					<div id="hidenbar"></div>
+				</div>
+			</div>
+			<div id="tabbar-with-contact" class="mui-control-content">
+                <div id="refreshRc" style="width:24px; margin-left: auto; margin-right: auto; margin-top: 10px;">
+					<span class="mui-icon mui-icon-loop"></span>
+				</div>
+				<div id="record-tab">
+					<div id="hidenbar"></div>
+				</div>
+			</div>
+			<div id="tabbar-with-map" class="mui-control-content">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell" id="pinfobtn">
+						<a class="mui-navigate-right">
+							个人信息
+						</a>
+					</li>
+					<li class="mui-table-view-cell" id="updatebtn">
+						<a class="mui-navigate-right">
+							软件升级
+						</a>
+					</li>
+					<li class="mui-table-view-cell" id="devpbtn">
+						<a class="mui-navigate-right">
+							开发者信息
+						</a>
+					</li>
+				</ul>
+				<ul class="mui-table-view" style="margin-top: 25px;">
+					<li class="mui-table-view-cell" id="aboutbtn">
+						<a class="mui-navigate-right">
+							关于pandafert
+						</a>
+					</li>
+				</ul>
+				<ul class="mui-table-view" style="margin-top: 25px;" id="exitbtn">
+					<li class="mui-table-view-cell">
+						<a style="text-align: center;color: #FF3B30;">
+							退出登录
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	<script type="text/javascript">
+		mui.init({
+		});
+		
+		if(window.plus){
+			    plusReady();
+			}else{ 
+			    document.addEventListener( "plusready", plusReady, false );
+			}
+			// 扩展API准备完成后要执行的操作
+			function plusReady(){
+				//关闭登录页面
+				//plus.webview.getWebviewById("H50845643").close('none');				
+				//刷新记录
+				refreshOrder();
+				refreshRecord();
+			  	//点击退出登录按钮则退出登录，先清空storage然后在open登录页面
+			  	$("#exitbtn").click(function(){
+			  		plus.storage.clear();
+			  		//关闭当前页面
+			  		var ws=plus.webview.currentWebview();
+			  		var logs = plus.webview.getWebviewById("login");
+					plus.webview.hide(ws);
+					plus.webview.show(logs);
+			  	});
+			  
+			  	//点击关于pandafert
+				$("#aboutbtn").click(function(){
+			  		mui.alert("这是一款免费开源软件，详情：qkmc@outlook.com");
+			  	});
+			  
+			 	//点击个人信息，会弹出个人信息直接使用弹出框算了..
+			 	$("#pinfobtn").click(function(){
+			  		mui.alert("个人信息正在开发中");
+			 	});
+			  
+			 	 //点击软件升级
+			 	$("#updatebtn").click(function(){
+				  	mui.alert("已经是最新版本");
+				  });
+			 	//点击开发者信息
+			 	$("#devpbtn").click(function(){
+			 	 	mui.alert("详情：http://www.github.com/qkmc-rk");
+			 	});
+			 	$("#refreshOd").click(function(){
+			 		$("#order-tab").empty();
+			 	 	refreshOrder();
+			 	 	mui.alert("刷新订单成功");
+			 	});
+			 	$("#refreshRc").click(function(){
+			 		$("#record-tab").empty();
+			 	 	refreshRecord();
+			 	 	mui.alert("刷新记录成功");
+			 	});
+			 	//点击添加到订单
+			 	$("#mkfertbtn").click(function(){
+			  	
+			  	var fa = $("#ferta").val();
+			  	var fb = $("#fertb").val();
+			  	var fc = $("#fertc").val();
+			  	
+				mui.ajax('http://139.199.15.45/makefert',{
+					data:{
+						token:plus.storage.getItem("token"),
+						ferta:fa,
+						fertb:fb,
+						fertc:fc
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						if(data.result == 'true')
+							mui.alert("成功加入订单！");
+							$("#ferta").val("");
+							$("#fertb").val("");
+							$("#fertc").val("");
+							//刷新一下订单
+							$("#order-tab").empty();
+							refreshOrder();
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理； 
+						console.log(type);
+					}
+				})
+			  });
+			  
+			  //获取所有的订单
+			  function refreshOrder(){
+			  	//ajax获取订单记录
+			  	mui.ajax('http://139.199.15.45/querryorder',{
+					data:{
+						token:plus.storage.getItem("token"),
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					async:false,
+					success:function(data){
+						//订单节点的创建
+						//步骤：循环遍历数组中的内容，然后每一次循环添加一次订单到订单中
+						for(x in data){
+							//首先获取数据
+							var orderId = data[x].orderId;
+							var orderNumber = data[x].orderNumber;
+							var creTime = data[x].creTime;
+							var ferta = data[x].fertA;
+							var fertb = data[x].fertB;
+							var fertc = data[x].fertC;
+							var crePersonId = data[x].crePersonId;
+							$("#order-tab").prepend("<div class='mui-card'><div class='mui-card-header'>"+orderNumber+"</div><div style='display: none;'>"+orderId+"</div><div class='mui-card-content-inner'>创建时间:"+creTime+" A:"+ferta+"  B:"+fertb+"  C:"+fertc+"</div><div class='mui-card-footer'>创建者ID:"+creTime+"</div><div class='mui-card-link' style='width: 80%;margin-left: auto;margin-right: auto;'><button type='button' class='mui-btn mui-btn-red mui-btn-block'>取消订单</button></div></div>");
+						}
+						
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理； 
+						console.log(type);
+					}
+				})
+			  }
+			  
+			  function refreshRecord(){
+			  	//ajax获取订单记录
+			  	mui.ajax('http://139.199.15.45/record',{
+					data:{
+						token:plus.storage.getItem("token"),
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					async:false,
+					success:function(data){
+						//订单节点的创建
+						//步骤：循环遍历数组中的内容，然后每一次循环添加一次订单到订单中
+						for(x in data){
+							//首先获取数据
+							var recordId = data[x].recordId;
+							var finishTime = data[x].finishTime;
+							var recordNumber = data[x].recordNumber;
+							var result = data[x].result;
+							var fertA = data[x].fertA;
+							var fertB = data[x].fertB;
+							var fertC = data[x].fertC;
+							$("#record-tab").prepend("<div class='mui-card'><div class='mui-card-header'>"+recordNumber+"</div><div class='id-hiden' style='display: none;'>"+recordId+"</div><div class='mui-card-content-inner'>完成时间:"+finishTime+" A:"+fertA+"  B:"+fertB+"  C:"+fertC+"</div><div class='mui-card-footer'>订单结果:"+result+"</div></div>");
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理； 
+						console.log(type);
+					}
+				})
+			  }
+			}
+    </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+{
+  "index.html": {
+    "resources": [
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "fonts/mui.ttf",
+      "mkfert.html",
+      "js/jquery-2.1.4.min.js"
+    ],
+    "refer": [
+      "record.html",
+      "order.html",
+      "mkfert.html",
+      "mine.html",
+      "login.html"
+    ]
+  },
+  "mine.html": {
+    "resources": [
+      "js/mui.min.js",
+      "css/mui.min.css"
+    ]
+  },
+  "login.html": {
+    "resources": [
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "js/jquery-2.1.4.min.js"
+    ],
+    "refer": [
+      "index.html"
+    ]
+  }
+}
